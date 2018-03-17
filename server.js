@@ -23,8 +23,8 @@ app.get("/", (req, res) =>
 );
 
 app.get("/buzzwords", (req, res) => {
-  res.set("success", "true"); //setting header status
   res.json(buzzWords); //return buzzWords obj as JSON
+  res.set("success", "true"); //setting header status
   res.end();
 });
 
@@ -33,27 +33,28 @@ app.post("/buzzwords", (req, res) => {
 
   if (Object.keys(buzzWords).length > 10) {
     //err if more than 5 objects
-    res.set("success", "false");
-    return;
+    res.set("success", "false").end();
   } else {
     buzzWords.buzzWord = newWord.buzzWord; //adding to object
     buzzWords.points = newWord.points;
     console.log(buzzWords);
-    res.set("success", "true");
+    res.set("success", "true").end();
     return buzzWords;
   }
 });
 
 app.put("/buzzwords", (req, res) => {
   let putWord = req.body;
+  console.log(buzzWords);
   for (var i = 0; i <= Object.keys(buzzWords).length; i++) {
     //iterating to find matching key
-    if (buzzWord.buzzWord[i] === putWord.buzzWord) {
-      buzzWords.buzzWord[i] = putWord.points;
+
+    if (buzzWords.buzzWord[i] === putWord.buzzWord) {
+      buzzWords.putWord[i] = putWord.points;
       console.log(buzzWords);
-      res.set("success", "true");
+      res.set("success", "true").end();
     } else {
-      res.set("success", "false");
+      res.set("success", "false").end();
     }
   }
 });
