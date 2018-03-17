@@ -13,18 +13,12 @@ app.use(
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.get("/", (req, res) =>
-  res.sendFile("./index.html", err => {
-    if (err) {
-      next(err);
-    } else {
-      console.log("sent: index.html");
-    }
-  })
+  res.sendFile("public/index.html", { root: __dirname })
 );
 
 app.get("/buzzwords", (req, res) => {
   res.json(buzzWords); //return buzzWords obj as JSON
-  res.set("success", "true"); //setting header status
+  res.append("success", "true"); //setting header status
   res.end();
 });
 
@@ -33,28 +27,32 @@ app.post("/buzzwords", (req, res) => {
 
   if (Object.keys(buzzWords).length > 10) {
     //err if more than 5 objects
-    res.set("success", "false").end();
+    res.append("success", "false").end();
   } else {
+    res.append("success", "true");
     buzzWords.buzzWord = newWord.buzzWord; //adding to object
     buzzWords.points = newWord.points;
     console.log(buzzWords);
-    res.set("success", "true").end();
+
+    res.end();
     return buzzWords;
   }
 });
 
 app.put("/buzzwords", (req, res) => {
   let putWord = req.body;
-  console.log(buzzWords);
+
   for (var i = 0; i <= Object.keys(buzzWords).length; i++) {
     //iterating to find matching key
 
     if (buzzWords.buzzWord[i] === putWord.buzzWord) {
+      res.append("success", "true");
       buzzWords.putWord[i] = putWord.points;
       console.log(buzzWords);
-      res.set("success", "true").end();
+
+      res.end();
     } else {
-      res.set("success", "false").end();
+      res.append("success", "false").end();
     }
   }
 });
